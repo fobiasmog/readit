@@ -1,0 +1,7 @@
+So here's the short version of what changed today. The team shipped version 2.4.1 of the billing service, and the headline is speed. Invoice generation dropped from about 3.2 seconds to 850 milliseconds, almost four times faster. <chuckle> Nobody expected that.
+
+How did it happen? Three things. First, the API now batches requests to the PDF renderer. Second, the SQL queries use a new index on the customer ID column. And third, the JSON payloads are cached for 15 minutes.
+
+There is one catch. Because the cache lives in memory on each node, a customer who updates their address and immediately downloads an invoice might, for a short window that can last up to a quarter of an hour, see the old address, and the team decided that this trade-off was acceptable for now while they design a proper invalidation step. <sigh> It's never quite free.
+
+The takeaway: faster invoices today, and a cleaner cache plan in the next release.
